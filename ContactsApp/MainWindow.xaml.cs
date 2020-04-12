@@ -22,14 +22,19 @@ namespace ContactsApp
     {
         List<Person> people_results = new List<Person>();
         List<Person> address_results = new List<Person>();
-
+        List<Person> email_results = new List<Person>();
+       
         public MainWindow()
         {
             InitializeComponent();
       
             btnDelete.IsEnabled = false;  
-            btnUpdate.IsEnabled = false;        
+            btnUpdate.IsEnabled = false;
+
+           
         }//end constructor
+
+
 
         private void RefreshListBoxBinding()
         {
@@ -40,6 +45,15 @@ namespace ContactsApp
             lstResults.DisplayMemberPath = "ResultData";          
         }//end method
 
+        private void RefreshListBoxBindingEmail()
+        {
+            //SET BINDING INSTANCE FOR LISTBOX
+            lstEmails.ItemsSource = email_results;
+
+            //SET BINDING FIELD FOR LISTBOX
+            lstEmails.DisplayMemberPath = "Email";
+        }//end method
+
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
             //CREATE DATA ACCESS INSTANCE
@@ -48,8 +62,12 @@ namespace ContactsApp
             //USE DATA ACCESS INSTANCE TO GET PEOPLE DATA FOM THE DB
             people_results = database_data.GetPeople(txtSearch.Text);
 
-            //CALL REFRESH BINGING FUNCTION
-            RefreshListBoxBinding();            
+            //CALL REFRESH BINDING FUNCTION
+            RefreshListBoxBinding();
+
+            //CLEAR EMAIL LISTBOX
+            lstEmails.ItemsSource = "";
+          
         }//end method
 
         private void lstResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -68,17 +86,21 @@ namespace ContactsApp
                 DataAccess database_data = new DataAccess();
                 //USE DATA ACCESS INSTANCE TO GET ADDRESS DATA FOM THE DB FOR SELECTED PERSON
                 address_results = database_data.GetAddress(idIndex);
+                email_results = database_data.GetEmail(idIndex);
+
+                //CALL EMAIL REFRESH BINDING FUNCTION
+                RefreshListBoxBindingEmail();
 
                 //SET TEXTBOX TO SELECTED DATA
                 txtFirstName.Text = people_results[indexClicked].first_name;
                 txtLastName.Text = people_results[indexClicked].last_name;
                 txtCellNum.Text = people_results[indexClicked].cell_number;
                 txtWorkNum.Text = people_results[indexClicked].work_number;
-                txtEmail.Text = people_results[indexClicked].email;
                 txtNotes.Text = people_results[indexClicked].notes;
-                //SET ADDRESS TEXTBOX EQUAL TO RECORD STORED IN ADDRESS RESULTS
                 txtAddress.Text = address_results[0].home_address;
+                txtEmail.Text = "";
 
+            
                 //ENABLE BUTTONS
                 btnDelete.IsEnabled = true;
                 btnUpdate.IsEnabled = true;
@@ -97,8 +119,25 @@ namespace ContactsApp
                 //DISABLE BUTTONS
                 btnDelete.IsEnabled = false;
                 btnUpdate.IsEnabled = false;
-            }//end if
+            }//end if       
         }//end method
+
+        private void lstEmails_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //INTIALIZE VARIABLE TO SELECTED INDEX
+            int emailIndexClicked = lstEmails.SelectedIndex;
+
+            //CHECK EMAIL LISTBOX SELECTION
+            if (emailIndexClicked != -1)
+            {
+
+                //INTIALIZE VARIABLE TO SELECTED INDEX ID NUMBER
+                int emailIndex = email_results[emailIndexClicked].id;
+
+                //SET ADDRESS TEXTBOX EQUAL TO RECORD STORED IN EMAIL RESULTS
+                txtEmail.Text = email_results[emailIndexClicked].email;
+            }//end if 
+        }// end method
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
@@ -170,9 +209,12 @@ namespace ContactsApp
 
             //INITIALIZE VARIABLE TO SELECTED INDEX
             int indexClicked = lstResults.SelectedIndex;
-            
             //INTIALIZE VARIABLE TO SELECTED INDEX ID NUMBER
             int idIndex = people_results[indexClicked].id;
+
+
+            //INTIALIZE VARIABLE TO SELECTED INDEX
+            int emailIndexClicked = lstEmails.SelectedIndex;
 
             //SET PROPERTIES OF PERSON INSTANCE EQUAL TO VALUE OF TEXT BOXES
             newPerson.first_name = txtFirstName.Text;
@@ -186,8 +228,23 @@ namespace ContactsApp
             //CREATE DATA ACCESS INSTANCE
             DataAccess database_data = new DataAccess();
 
+           int emailIndex = -2;
+            
+            //CHECK LISTBOX SELECTION
+            if (emailIndexClicked != -1)
+            {  
+                //INTIALIZE VARIABLE TO EMAIL SELECTED INDEX ID NUMBER
+                emailIndex = email_results[emailIndexClicked].id; 
+            }//end if 
+            //NO LISTBOX SELECTION
+            if(emailIndexClicked == -1)
+            {
+                //INITALIZE VARIABLE TO EMAIL RESULTS ID
+                emailIndex = email_results[0].id;
+            }//end if 
+
             //USE DATA ACCESS INSTANCE TO GET PEOPLE DATA FOM THE DB
-            database_data.UpdatePerson(newPerson,idIndex);
+            database_data.UpdatePerson(newPerson, emailIndex);
 
             //USE DATA ACCESS INSTANCE TO UPDATE PEOPLE DATA FOM THE DB
             people_results = database_data.GetPeople(txtSearch.Text);
@@ -201,7 +258,8 @@ namespace ContactsApp
             //SHOW NEW SUBWINDOW ONCLICK
             SubWindow MySubWindow = new SubWindow();
             MySubWindow.ShowDialog();
-        }//end method
-   
+        }//end method 
+
+       
     }//end class
 }//end namespace
