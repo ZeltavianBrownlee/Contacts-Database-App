@@ -244,7 +244,7 @@ namespace ContactsApp
             }//end if 
 
             //USE DATA ACCESS INSTANCE TO GET PEOPLE DATA FOM THE DB
-            database_data.UpdatePerson(newPerson, emailIndex);
+            database_data.UpdatePerson(newPerson, idIndex, emailIndex);
 
             //USE DATA ACCESS INSTANCE TO UPDATE PEOPLE DATA FOM THE DB
             people_results = database_data.GetPeople(txtSearch.Text);

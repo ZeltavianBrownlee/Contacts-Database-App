@@ -240,7 +240,7 @@ namespace ContactsApp
             sql_connection.Close();
         }//end method
 
-        public void UpdatePerson(Person newPerson, int idIndex)
+        public void UpdatePerson(Person newPerson, int idIndex, int emailIndex)
         {
 
             // GET CONNECTION STRING FROM HELPER CLASS
@@ -267,7 +267,7 @@ namespace ContactsApp
             sql_command.ExecuteNonQuery();
 
             //BUILD QUERY UPDATE EMAIL
-            queryStatement = $"Update Email SET email = '{newPerson.email}' WHERE id LIKE '{idIndex}';";
+            queryStatement = $"Update Email SET email = '{newPerson.email}' WHERE id LIKE '{emailIndex}';";
             sql_command = new SqlCommand(queryStatement, sql_connection);
 
             //EXECUTE QUERY
