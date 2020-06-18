@@ -65,6 +65,19 @@ namespace ContactsApp
             //CALL REFRESH BINDING FUNCTION
             RefreshListBoxBinding();
 
+            //REST TEXT BOXES TO EMPTY
+            txtFirstName.Text = "";
+            txtLastName.Text = "";
+            txtCellNum.Text = "";
+            txtWorkNum.Text = "";
+            txtEmail.Text = "";
+            txtAddress.Text = "";
+            txtNotes.Text = "";
+
+            //DISABLE BUTTONS
+            btnDelete.IsEnabled = false;
+            btnUpdate.IsEnabled = false;
+
             //CLEAR EMAIL LISTBOX
             lstEmails.ItemsSource = "";
           
@@ -104,22 +117,22 @@ namespace ContactsApp
                 //ENABLE BUTTONS
                 btnDelete.IsEnabled = true;
                 btnUpdate.IsEnabled = true;
-            }
-            else
-            {
-                //REST TEXT BOXES TO EMPTY
-                txtFirstName.Text="";
-                txtLastName.Text="";
-                txtCellNum.Text="";
-                txtWorkNum.Text="";
-                txtEmail.Text="";
-                txtAddress.Text="";
-                txtNotes.Text="";
+            }//end if
+            //else
+            //{
+            //    //REST TEXT BOXES TO EMPTY
+            //    txtFirstName.Text="";
+            //    txtLastName.Text="";
+            //    txtCellNum.Text="";
+            //    txtWorkNum.Text="";
+            //    txtEmail.Text="";
+            //    txtAddress.Text="";
+            //    txtNotes.Text="";
 
-                //DISABLE BUTTONS
-                btnDelete.IsEnabled = false;
-                btnUpdate.IsEnabled = false;
-            }//end if       
+            //    //DISABLE BUTTONS
+            //    btnDelete.IsEnabled = false;
+            //    btnUpdate.IsEnabled = false;
+            //}//end if       
         }//end method
 
         private void lstEmails_SelectionChanged(object sender, SelectionChangedEventArgs e)
